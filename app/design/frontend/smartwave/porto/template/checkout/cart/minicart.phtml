@@ -7,10 +7,21 @@
     <?php $_cartQty = $this->getSummaryCount(); ?>
     <?php
         if(!$_cartQty) $_cartQty = 0;
-        $_subtotal = $this->helper('checkout')->formatPrice(Mage::getSingleton('checkout/cart')->getQuote()->getGrandTotal())
+        $_subtotal = $this->helper('checkout')->formatPrice(Mage::getSingleton('checkout/cart')->getQuote()->getGrandTotal());
+        //Vinu changes added to get shipping amount to display in minicart
+        $_shipping = Mage::getSingleton('checkout/session')->getQuote()->getShippingAddress()->getShippingAmount();
+        //Vinu changes to get shipping amount end
     ?>
     <?php $_items = $this->getRecentItems() ?>
-    <a href="javascript:void(0)" class="mybag-link"><i class="icon-mini-cart"></i><span class="cart-info"><span class="cart-qty"><?php echo $_cartQty ?></span><span><?php echo $this->__('item(s)') ?></span></span></a>
+    <!--Vinu changes for new cart icon image on empty & loaded cart-->
+    <a href="javascript:void(0)" class="mybag-link"><i class="icon-mini-cart"></i><span class="cart-info"><span class="cart-qty"><?php echo $_cartQty = $this->getSummaryCount() ?></span><span><?php echo $this->__('item(s)') ?></span></span></a>
+    
+    <!--<?php if ($_cartQty == 0): ?>
+        <?php echo $this->__('<a href="javascript:void(0)"><img src='.$this->getSkinUrl('images/empty-cart.png').' alt="Empty cart" /></a>') ?>
+    <?php elseif ($_cartQty >= 1): ?>
+        <?php echo $this->__('<a href="javascript:void(0)" id="ico-cart"><img src='.$this->getSkinUrl('images/full-cart.png').' alt="Loaded cart" /><span class="count">%s</span></a>', $_cartQty) ?>
+    <?php endif ?>-->
+    <!--Vinu changes end-->
         <div class="topCartContent block-content theme-border-color">
             <div class="inner-wrapper"><?php /*extra div to smooth slideUp and slideDown*/ ?>
                 <?php $_items = $this->getRecentItems() ?>
@@ -20,6 +31,14 @@
                             <?php echo $this->getItemHtml($_item) ?>
                         <?php endforeach; ?>
                     </ol>
+                    <!--Vinu changes added to display shipping amount if it is greater than zero -->
+                    <?php if($_shipping != '0'): ?>
+                        <div style="text-align: center; font-size: 15px; font-weight: 300;">
+                            <span class="label"><?php echo 'Shipping'?>: </span>
+                            <span class="price-total"><?php echo $this->helper('checkout')->formatPrice($_shipping) ?></span>
+                        </div>
+                    <?php endif; ?>
+                    <!--Vinu changes for display of shipping amount end -->
                     <div class="totals">
                         <span class="label"><?php echo $this->__('Total')?>: </span>
                         <span class="price-total"><?php echo $_subtotal ?></span>

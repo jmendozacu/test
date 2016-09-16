@@ -43,7 +43,7 @@
                     <host><![CDATA[localhost]]></host>
                     <username><![CDATA[magento-1905]]></username>
                     <password><![CDATA[magento-1905]]></password>
-                    <dbname><![CDATA[portobase]]></dbname>
+                    <dbname><![CDATA[portobase-check]]></dbname>
                     <initStatements><![CDATA[SET NAMES utf8]]></initStatements>
                     <model><![CDATA[mysql4]]></model>
                     <type><![CDATA[pdo_mysql]]></type>

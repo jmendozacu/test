@@ -27,6 +27,9 @@
             <td class="a-right">
                 <?php if ($this->getCanShowProductPrice($_item)): ?>
                 <?php echo $this->getPriceHtml($_item, true) ?>
+                <!--vinu changes start (to get unit measure for price)-->
+                <?php echo $_item->getData('by_unit'); ?>
+                <!--vinu changes end-->
                 <?php echo $this->getTierPriceHtml($_item) ?>
                 <?php endif; ?>
             </td>

@@ -104,7 +104,7 @@ if($enable_addtocart_sticky){
 <?php
 }
 ?>
-        <div class="row">
+        <div class="row product-page-options-block">
             <div class="product-img-box col-sm-5">
                 <?php echo $this->getChildHtml('media') ?>
             </div>
@@ -146,60 +146,170 @@ if($enable_addtocart_sticky){
             <?php
                 }
             ?>
-                <div class="product-name">
-                    <h1 <?php if($enabled_richsnippets): ?>itemprop="name"<?php endif; ?>><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
-                </div>
-                <?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
-                <?php if ($_product->getShortDescription()):?>
-                    <div class="short-description">
-                        <h2><?php echo $this->__('Quick Overview') ?></h2>
-                        <div class="std" <?php if($enabled_richsnippets): ?>itemprop="description"<?php endif; ?>><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></div>
-                    </div>
-                <?php endif;?>
-                <div class="product-info">
-                    <div <?php if($enabled_richsnippets) echo $helper_richsnippets->getOfferItemscope(); ?>>
-                        <?php echo $this->getChildHtml('product_type_data'); ?>
-                        <?php echo $this->getTierPriceHtml(); ?>
-                        <?php echo $price_properties; ?>
-                    </div>
-                    <?php echo $this->getChildHtml('extrahint') ?>
-                    <?php if ($this->canEmailToFriend()): ?>
-                        <p class="email-friend"><a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a></p>
-                    <?php endif; ?>
-                    <?php if($sku = $_product->getSku()): ?>
-                        <?php if($enabled_richsnippets): ?><meta itemprop="productID" content="sku:<?php echo $sku; ?>" /><?php endif; ?>
-                    <?php endif; ?>
-                    <?php echo $this->getChildHtml('alert_urls') ?>
-                    <?php echo $this->getChildHtml('other');?>
-                </div>
-                <?php if (!$this->hasOptions()):?>
-                    <div class="clearer"></div>
-                    <div class="add-to-box">
-                        <?php if($_product->isSaleable()): ?>
-                            <?php echo $this->getChildHtml('addtocart') ?>
-                            <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        <?php echo $this->getChildHtml('addto') ?>
-                    </div>
-                    <?php echo $this->getChildHtml('extra_buttons') ?>
-                <?php elseif (!$_product->isSaleable()): ?>
-                    <div class="clearer"></div>
-                    <div class="add-to-box">
-                        <?php echo $this->getChildHtml('addto') ?>
-                    </div>
-                <?php endif; ?>
+            <!-- Vinu changes to display product data with some part to right -->
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div class="product-name">
+                                <h1 <?php if($enabled_richsnippets): ?>itemprop="name"<?php endif; ?>><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+                            </div>
+                            
+                            <?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
 
-                <?php if ($_product->isSaleable() && $this->hasOptions()):?>
-                    <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
-                <?php endif;?>
-                <?php echo $this->getChildHtml('smartwave_sharetool'); ?>
+                            <!--<?php if ($_product->getShortDescription()):?>
+                                <div class="short-description">
+                                    <h2><?php echo $this->__('Quick Overview') ?></h2>
+                                    <div class="std" <?php if($enabled_richsnippets): ?>itemprop="description"<?php endif; ?>><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></div>
+                                </div>
+                            <?php endif;?>-->
+                            <!--Vinu changes for adding features block -->
+                            <?php $featuresTable = array(); ?>
+                            <?php $attributes = $_product->getAttributes(); ?>
+                            <?php foreach ($attributes as $attribute): ?>
+                                <?php if ($attribute->getIsVisibleOnFront()) { ?>
+                                    <?php if (!is_null($_product->getData($attribute->getAttributeCode())) && ((string)$attribute->getFrontend()->getValue($_product) != '')) { ?>
+                                        <?php
+                                            $label = $attribute->getFrontend()->getLabel($_product);
+                                            $value = $attribute->getFrontend()->getValue($_product);
+                                            array_push($featuresTable, $label.'*yyy*'.$value);
+                                        ?>
+                                    <?php } ?>
+                                <?php } ?>
+                            <?php endforeach ?>
+                            <?php if(count($featuresTable) > 1) { ?>
+                                <div class="features">
+                                    <div class="subHeading">Features</div>
+                                    <ul>
+                                        <?php 
+                                        for ($i=1; $i < 6; $i++) { 
+                                            $featureRow = explode('*yyy*', $featuresTable[$i]);
+                                            if ($featureRow[0] == '') {
+                                                break;
+                                            }else{
+                                                echo "<li><span>".$featureRow[0]."</span> : ".$featureRow[1]."</li>";
+                                            } 
+                                        }
+                                        ?>
+                                        <?php if(count($featuresTable) > 6) { ?>
+                                            <a class="more" href="#Features_Link_From_Top" rel="noindex">More Details</a>
+                                        <?php } ?>
+                                    </ul>
+                                </div>
+                            <?php } ?>
+                            <!--Vinu changes end for addition of features block-->
+                            <div class="product-info">
+                                
+                                <div <?php if($enabled_richsnippets) echo $helper_richsnippets->getOfferItemscope(); ?>>
+                                    <?php echo $this->getChildHtml('product_type_data'); ?>
+                                </div>
+                                <?php echo $this->getChildHtml('extrahint') ?>
+                                <!--changes start commenting out to remove display on frontend-->
+                                <!--<?php if ($this->canEmailToFriend()): ?>
+                                    <p class="email-friend"><a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a></p>
+                                <?php endif; ?>-->
+                                <!--changes end-->
+                                <?php if($sku = $_product->getSku()): ?>
+                                    <?php if($enabled_richsnippets): ?><meta itemprop="productID" content="sku:<?php echo $sku; ?>" /><?php endif; ?>
+                                <?php endif; ?>
+                                <?php echo $this->getChildHtml('alert_urls') ?>
+                                <?php echo $this->getChildHtml('other');?>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <!-- Vinu changes to add brand logo & link -->
+                            <div class="brand-logo">
+                                <?php
+                                    $manufacturerName = $_product->getAttributeText('manufacturer'); 
+                                    $manufacturerId = $_product->getManufacturer(); 
+                                    $_getBase = Mage::app()->getStore()->getBaseUrl();
+                                    echo '<a href="'.$_getBase.'catalogsearch/result/?manufacturer='.$manufacturerId.'&q='.$manufacturerName.'" rel="nofollow">' 
+                                ?> 
+                                    <img src="<?php echo Mage::app()->getStore()->getBaseUrl(); ?>media/catalog/brands/<?php echo str_replace(' ', '_',$manufacturerName); ?>.png" alt="<?php echo $manufacturerName; ?>" title="<?php echo $this->__('To see more from') ?>&nbsp;<?php echo $manufacturerName; ?>&nbsp;<?php echo $this->__('click here') ?>" />
+                                </a>
+                            </div>
+                            <!-- Vinu changes for brand logo end -->
+                            <!-- Vinu changes moving prices display to right side -->
+                            <div class="price-area">
+                                <!-- Vinu changes for adding mrp price display only if value is present for product & percentage discount calculation -->
+                                <?php if($_product->getR4q_enabled() && !$_product->getR4q_order_disabled()) :?>
+                                    <?php if($_product->getMrp_price()!= ''): ?>
+                                        <?php echo $this->__('MRP : '); ?><span class="mrp-price view-page"><?php echo Mage::helper('core')->currency($_product->getMrp_price(),true,false); ?></span>
+                                    <?php endif; ?>
+                                    <?php 
+                                        $MrpPrice = $_product->getMrp_price();
+                                        $MainPrice = $_product->getPrice();
+                                        $percentage = 0;
+                                        if ($MrpPrice > $MainPrice) {
+                                            $percentage = round(($MrpPrice - $MainPrice) * 100 / $MrpPrice);
+                                        }
+
+                                        if ($percentage) { echo $this->__('(%s', $percentage . '% off)'); } 
+                                    ?>
+                                <?php elseif(!$_product->getR4q_enabled()) :?>
+                                    <?php if($_product->getMrp_price()!= ''): ?>
+                                        <?php echo $this->__('MRP : '); ?><span class="mrp-price view-page"><?php echo Mage::helper('core')->currency($_product->getMrp_price(),true,false); ?></span>
+                                    <?php endif; ?>
+                                    <?php 
+                                        $MrpPrice = $_product->getMrp_price();
+                                        $MainPrice = $_product->getPrice();
+                                        $percentage = 0;
+                                        if ($MrpPrice > $MainPrice) {
+                                            $percentage = round(($MrpPrice - $MainPrice) * 100 / $MrpPrice);
+                                        }
+
+                                        if ($percentage) { echo $this->__('(%s', $percentage . '% off)'); } 
+                                    ?> 
+                                <?php endif; ?>
+                                <!-- Vinu changes end for mrp & discount percentage display-->
+                                <!-- Vinu changes to display price in right side -->
+                                <div <?php if($enabled_richsnippets) echo $helper_richsnippets->getOfferItemscope(); ?>>
+                                    <?php if($_product->getR4q_enabled() && !$_product->getR4q_order_disabled()) :?>
+                                        <?php echo $this->__('Price : '); ?>
+                                    <?php elseif(!$_product->getR4q_enabled()) :?>
+                                        <?php echo $this->__('Price : '); ?>
+                                    <?php endif; ?>
+                                    <?php echo $this->getPriceHtml($_product) ?>
+                                    <?php echo $this->getTierPriceHtml(); ?>
+                                    <?php echo $price_properties; ?>
+                                </div>
+                                <!-- Vinu changes end to display price in right side -->
+                            </div>
+                            <!-- Vinu changes end for moving prices display to right side -->
+                            <!-- Vinu changes to display add to links block to right side -->
+                            <?php if($_product->isSaleable()): ?>
+                                <div class="clearer"></div>
+                                <div class="add-to-box">
+                                    <?php echo $this->getChildHtml('addtocart') ?>
+                                    <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+                                    <?php endif; ?>
+                                    <?php echo $this->getChildHtml('addto') ?>
+                                </div>
+                                <?php echo $this->getChildHtml('extra_buttons') ?>
+                            <?php else: ?>
+                                <div class="clearer"></div>
+                                <div class="add-to-box">
+                                    <?php echo $this->getChildHtml('addto') ?>
+                                </div>
+                            <?php endif; ?>
+                            <!-- Vinu changes end to display add to links block to right side -->
+                        </div>
+                    </div>
+                    <!-- Vinu changes end to display product data with some part to right -->
+
+                    <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                        <?php echo $this->getChildChildHtml('container2', '', true, false) ?>
+                    <?php endif;?>
+                    <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                        <?php echo $this->getChildChildHtml('container1', '', true, false) ?>
+                    <?php endif;?>
+                
+                <!--changes start commenting out to remove display on frontend-->
+                <!--?php echo $this->getChildHtml('smartwave_sharetool'); ?>-->
+                <!--changes end-->
             </div>
+            
 
         </div>
-        <?php if ($_product->isSaleable() && $this->hasOptions()):?>
-            <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
-        <?php endif;?>
+        
     </form>
 <?php if(Mage::getStoreConfig('ajaxcart/addtocart/enableproduct') && (Mage::app()->getFrontController()->getRequest()->getModuleName() == "catalog") || (Mage::app()->getFrontController()->getRequest()->getModuleName() == "quickview")): ?>
     <script type="text/javascript">
@@ -324,7 +434,7 @@ if($enable_addtocart_sticky){
         }.bind(productAddToCartForm);
     //]]>
     </script>
-<?php else : ?>
+    <?php else : ?>
     <script type="text/javascript">
     //<![CDATA[
         var productAddToCartForm = new VarienForm('product_addtocart_form');
@@ -337,17 +447,104 @@ if($enable_addtocart_sticky){
                    form.action = url;
                 }
                 var e = null;
-                try {
-                    this.form.submit();
-                } catch (e) {
+                if (!url) {
+                    url = jQuery('#product_addtocart_form').attr('action');
                 }
+                if(url.indexOf("wishlist/index/cart") != -1){
+                    url = url.replace("wishlist/index/cart","ajaxcart/index/add"); // New Code
+                } else {
+                    url = url.replace("checkout/cart","ajaxcart/index"); // New Code
+                }
+                url = url.replace("http://", "//");
+                url = url.replace("https://", "//");
+                var data = jQuery('#product_addtocart_form').serialize();
+                data += '&isAjax=1';
+                jQuery('#loading-mask').show();
+                try {
+                    jQuery.ajax({
+                        url : url,
+                        dataType : 'json',
+                        type : 'post',
+                        data : data,
+                        success : function(data) {
+                            if(is_quickview)
+                                window.parent.jQuery('#loading-mask').hide();
+                            else
+                                jQuery('#loading-mask').hide();
+                            if(data.status == 'ERROR'){
+                                if(is_quickview)
+                                    window.parent.alert(data.message.replace("<br/>",""));
+                                else
+                                    alert(data.message.replace("<br/>",""));
+                            }else{
+                                if(is_quickview){
+                                    if(window.parent.jQuery('.header .mini-cart')){
+                                        window.parent.jQuery('.header .mini-cart').replaceWith(data.toplink);
+                                    }
+                                    if(window.parent.jQuery('.fixed-header .mini-cart')){
+                                        window.parent.jQuery('.fixed-header .mini-cart').replaceWith(data.toplink);
+                                    }
+                                    if(window.parent.jQuery('.sticky-header .mini-cart')){
+                                        window.parent.jQuery('.sticky-header .mini-cart').replaceWith(data.toplink);
+                                    }
+                                    if(window.parent.jQuery('.col-right .block.block-cart')){
+                                        window.parent.jQuery('.col-right .block.block-cart').replaceWith(data.cart_sidebar);
+                                    }
+                                    window.parent.jQuery('#after-loading-success-message #success-message-container .msg-box').html(data.message);
+                                    <?php $autoclose = Mage::getStoreConfig('ajaxcart/addtocart/autoclose', $code);?>
+                                    ajaxcart_sec = <?php echo ($autoclose && is_numeric($autoclose))?$autoclose:5; ?>;
+                                    timer_sec = ajaxcart_sec;
+                                    window.parent.jQuery('#after-loading-success-message').fadeIn(200);
+                                    ajaxcart_timer = setInterval(function(){
+                                        timer_sec --;
+                                        window.parent.jQuery('#after-loading-success-message .timer').html(timer_sec);
+                                    },1000)
+                                    setTimeout(function(){
+                                        window.parent.jQuery('#after-loading-success-message').fadeOut(200);
+                                        clearTimeout(ajaxcart_timer);
+                                        setTimeout(function(){
+                                            window.parent.jQuery('#after-loading-success-message .timer').html(ajaxcart_sec);
+                                        }, 1000);
+                                    },ajaxcart_sec*1000);
+                                }
+                                else {
+                                    if(jQuery('.header .mini-cart')){
+                                        jQuery('.header .mini-cart').replaceWith(data.toplink);
+                                    }
+                                    if(jQuery('.fixed-header .mini-cart')){
+                                        jQuery('.fixed-header .mini-cart').replaceWith(data.toplink);
+                                    }
+                                    if(jQuery('.sticky-header .mini-cart')){
+                                        jQuery('.sticky-header .mini-cart').replaceWith(data.toplink);
+                                    }
+                                    if(jQuery('.col-right .block.block-cart')){
+                                        jQuery('.col-right .block.block-cart').replaceWith(data.cart_sidebar);
+                                    }
+                                    jQuery('#after-loading-success-message #success-message-container .msg-box').html(data.message);
+                                    <?php $autoclose = Mage::getStoreConfig('ajaxcart/addtocart/autoclose', $code);?>
+                                    ajaxcart_sec = <?php echo ($autoclose && is_numeric($autoclose))?$autoclose:5; ?>;
+                                    timer_sec = ajaxcart_sec;
+                                    jQuery('#after-loading-success-message').fadeIn(200);
+                                    ajaxcart_timer = setInterval(function(){
+                                        timer_sec --;
+                                        jQuery('#after-loading-success-message .timer').html(timer_sec);
+                                    },1000)
+                                    setTimeout(function(){
+                                        jQuery('#after-loading-success-message').fadeOut(200);
+                                        clearTimeout(ajaxcart_timer);
+                                        setTimeout(function(){
+                                            jQuery('#after-loading-success-message .timer').html(ajaxcart_sec);
+                                        }, 1000);
+                                    },ajaxcart_sec*1000);
+                                }
+                            }
+                        }
+                    });
+                } catch (e) {
+                }                
                 this.form.action = oldUrl;
                 if (e) {
                     throw e;
-                }
-
-                if (button && button != 'undefined') {
-                    button.disabled = true;
                 }
             }
         }.bind(productAddToCartForm);
@@ -380,9 +577,30 @@ if($enable_addtocart_sticky){
     </script>
     </div>
 
-    <div class="product-collateral">
-        <?php echo $this->getChildHtml('product_additional_data'); ?>
-    </div>
+    <!-- Vinu changes to link more button on click to specifications from features block at top -->
+    <a id="Features_Link_From_Top">
+        <div class="product-collateral">
+            <!-- Vinu changes to Description display to show it outside tabs (commented out for now) -->
+            <?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html):?>
+                <div class="box-collateral <?php echo "box-{$alias}"?>">
+                    <?php if ($title = $this->getChildData($alias, 'title')):?>
+                        <h2><?php echo $this->escapeHtml($title); ?></h2>
+                    <?php endif;?>
+                    <!--<?php echo $html; ?>-->
+                </div>
+            <?php endforeach;?>
+            <!-- Vinu changes end for Description display to show it outside tabs (commented out for now) -->
+            <!-- Vinu changes to display short desciprion -->
+            <?php if ($_product->getShortDescription()):?>
+                <div class="short-description">
+                    <h2><?php echo $this->__('Quick Overview') ?></h2>
+                    <div class="std" <?php if($enabled_richsnippets): ?>itemprop="description"<?php endif; ?>><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></div>
+                </div>
+            <?php endif;?>
+            <!-- Vinu changes end to display short desciprion -->
+            <?php echo $this->getChildHtml('product_additional_data'); ?>
+        </div>
+    </a>
     <?php echo $this->getChildHtml('upsell_products'); ?>
 </div>
 <script type="text/javascript">

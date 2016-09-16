@@ -1,11 +1,17 @@
 <?php $_product = $this->getProduct() ?>
-
-<?php echo $this->getPriceHtml($_product) ?>
-
+<!--<?php echo $this->getPriceHtml($_product) ?>-->
 <?php if ($_product->isAvailable()): ?>
 	<p class="availability in-stock"><?php echo $this->__('Availability:') ?> <span><?php echo $this->__('In stock') ?></span></p>
 <?php else: ?>
 	<p class="availability out-of-stock"><?php echo $this->__('Availability:') ?> <span><?php echo $this->__('Out of stock') ?></span></p>
 <?php endif; ?>
+
+<!-- Vinu changes for adding delivery days -->
+    <?php if($_product->getDelivery_period()!= ''): ?>
+        <div class="delivery-box">
+            <span class="delivery-period"><?php echo '<strong>Estimated Delivery time: </strong>'.$_product->getDelivery_period(); ?></span>
+        </div>
+    <?php endif; ?>
+<!-- Vinu changes end for delivery days -->
 
 <?php echo $this->getChildHtml('product_type_data_extra') ?>

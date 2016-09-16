@@ -1,0 +1,31 @@
+<?php
+/*
+* List Sub catgories template
+*/
+?>
+<div class="sub-cat-list2">
+    <h3 class="filter-title l-height70">
+        <span class="content">
+            <strong>Shop by Categories</strong>
+        </span>
+    </h3>
+    <?php 
+    $categories = Mage::getResourceModel('catalog/category_collection')->addAttributeToSelect('*')->addAttributeToFilter('is_active', 1)->addAttributeToFilter('parent_id', 2)->addAttributeToSort('position');
+    $maxCategoryCount    = $this->getCategoryCount();
+    $i; foreach ($categories as $_category): $i++;
+        if ($i > $maxCategoryCount): break; endif;
+        $cat = Mage::getModel('catalog/category')->load($_category->getId());
+        //$count = $cat->getProductCount(); 
+    ?>  
+        <ul class="img-list2">
+            <li class="catItem2">
+                <div class="catbox2">
+                    <?php if($_category->getThumbnail()): ?>
+                        <a href="<?php echo Mage::getUrl($cat->getUrlPath()); ?>" title="<?php echo $_category->getName() ?>"><img src="<?php echo Mage::getBaseUrl('media').'catalog/category/'. $_category->getThumbnail(); ?>" alt="<?php echo $_category->getName(); ?>"  /></a>
+                    <?php endif; ?> 
+                </div>
+                <h5 class="category-name parent-category2"><a class="text-color" href="<?php echo Mage::getUrl($cat->getUrlPath()); ?>" title="<?php echo $_category->getName(); ?>"><?php echo $_category->getName(); ?></a></h5>
+            </li>
+        </ul> 
+    <?php endforeach; ?>
+</div>

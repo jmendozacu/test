@@ -9,12 +9,12 @@
             <action method="addBodyClass" ifconfig="porto_settings/header/type" condition="11"><classname>side-header</classname></action>
             <action method="addBodyClass" ifconfig="porto_settings/general/layout" condition="full_width"><classname>full-width</classname></action>
         </reference>
-        <reference name="head">
+        <reference name="head"> 
             <action method="addJs"><script>smartwave/jquery/jquery-1.10.2.min.js</script></action>
-            <action method="addJs"><script>smartwave/jquery/jquery-noconflict.js</script></action>
+            <action method="addJs"><script>smartwave/jquery/jquery-noconflict.js</script></action>  
             <action method="addJs"><script>smartwave/jquery/jquery-ui-1.10.4.min.js</script></action>
             <action method="addItem"><type>js_css</type><name>smartwave/jquery/jquery-ui-1.10.4.min.css</name></action>
-            <action method="addJs"><script>smartwave/jquery/plugins/fancybox/js/jquery.fancybox.js</script></action>
+            <action method="addJs"><script>smartwave/jquery/plugins/fancybox/js/jquery.fancybox.js</script></action> 
             <action method="addItem"><type>js_css</type><name>smartwave/jquery/plugins/fancybox/css/jquery.fancybox.css</name></action>
             <action method="addItem"><type>skin_js</type><name>js/wow.min.js</name></action>
             <action method="addItem"><type>js</type><name>smartwave/jquery/plugins/selectbox/jquery.selectbox.js</name><params/></action>
@@ -35,7 +35,7 @@
             <action method="addItem"><type>js_css</type><name>smartwave/jquery/plugins/selectbox/selectbox.css</name></action>
             <action method="addCss"><stylesheet>css/animate.css</stylesheet></action>
             <action method="addItem"><type>skin_js</type><name>js/porto.js</name></action>
-            <action method="addJs"><script>smartwave/bootstrap/js/bootstrap.min.js</script></action>
+            <action method="addJs"><script>smartwave/bootstrap/js/bootstrap.min.js</script></action>  
             
             <action method="removeItem"><type>skin_css</type><name>css/styles.css</name></action> 
             <action method="addCss"><stylesheet>icons/css/porto.css</stylesheet></action>
@@ -53,6 +53,19 @@
             <action method="addCss"><stylesheet helper="porto/cssconfig/getSettingsFile"/></action>
             <action method="addCss" ifconfig="porto_settings/general/rtl" condition="0"><stylesheet>css/custom.css</stylesheet></action>
             <action method="addCss" ifconfig="porto_settings/general/rtl" condition="1"><stylesheet>css/rtl-custom.css</stylesheet></action>
+            <!-- Vinu changes start added -->
+            <action method="addCss"><stylesheet>css/self.css</stylesheet></action>
+            <action method="addJs"><script>self/jquery.hc-sticky.min.js</script></action> 
+            <!-- changes end -->
+            <action method="addItem"><type>skin_js</type><name>js/checkout.js</name></action>
+            <action method="addJs"><script>self/jquery.sticky-kit.min.js</script></action>
+            <block type="core/text" name="bingmetatag">
+                <action method="setText">
+                    <text>
+                        <![CDATA[<meta name="msvalidate.01" content="3AC8169D8F1D8164950864DC259F0571" />]]>
+                    </text>
+                </action>
+            </block> 
         </reference>
         <reference name="header">
             <action method="setTemplate" ifconfig="porto_settings/header/type" condition="0"><template>page/html/header_type1.phtml</template></action>
@@ -67,10 +80,12 @@
             <action method="setTemplate" ifconfig="porto_settings/header/type" condition="9"><template>page/html/header_type10.phtml</template></action>
             <action method="setTemplate" ifconfig="porto_settings/header/type" condition="10"><template>page/html/header_type11.phtml</template></action>
             <action method="setTemplate" ifconfig="porto_settings/header/type" condition="11"><template>page/html/header_type12.phtml</template></action>
+            <action method="setTemplate" ifconfig="porto_settings/header/type" condition="12"><template>page/html/header_type13.phtml</template></action>
             <block type="directory/currency" name="store_currency" template="page/switch/currency.phtml"/>
-			<block type="catalog/product_compare_sidebar" name="compare_link">
+            <!-- Vinu changes start (to remove compare from header) -->
+			<!--<block type="catalog/product_compare_sidebar" name="compare_link">
 				<action method="setTemplate" ifconfig="porto_settings/product_compare/show_link"><template>catalog/product/compare/compare_link.phtml</template></action>
-			</block>
+			</block>-->
             <block type="checkout/cart_sidebar" name="minicart">
                 <action method="setTemplate"><template>checkout/cart/minicart.phtml</template></action>
                 <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/cart/minicart/default.phtml</template></action>
@@ -86,6 +101,13 @@
         </reference>
         <reference name="top.links">
             <remove name="checkout_cart_link"/>
+            <!-- vinu changes start added -->
+            <remove name="store_language"/>
+            <action method="removeLinkByUrl">
+                <url helper="customer/getAccountUrl"/>
+            </action>
+            <action method="removeLinkBlock"><blockName>wishlist_link</blockName></action>
+            <!-- changes end -->
         </reference>
         <reference name="top.menu">
             <action method="unsetChild" ifconfig="porto_settings/header/type" condition="9"><name>catalog.topnav</name></action>
@@ -150,7 +172,8 @@
         </reference>
         <reference name="left">
             <remove name="tags_popular"/>
-            <block type="cms/block" name="custom_side_block" after="-"><action method="setBlockId"><block_id>porto_left_side_category</block_id></action></block>
+            <!-- vinu changes to remove additional items from left navigation -->
+            <!--<block type="cms/block" name="custom_side_block" after="-"><action method="setBlockId"><block_id>porto_left_side_category</block_id></action></block>-->
         </reference>
     </catalog_category_default>
     
@@ -170,7 +193,8 @@
             <reference name="catalog.leftnav">
                 <action method="unsetChild"><child>category_filter</child></action>
             </reference>
-            <block type="cms/block" name="custom_side_block" after="-"><action method="setBlockId"><block_id>porto_left_side_category</block_id></action></block>
+            <!-- vinu changes to remove additional items from left navigation -->
+            <!--<block type="cms/block" name="custom_side_block" after="-"><action method="setBlockId"><block_id>porto_left_side_category</block_id></action></block>-->
         </reference>
     </catalog_category_layered>
     <catalog_product_view>
@@ -185,40 +209,85 @@
             <action method="addJs"><script>smartwave/jquery/plugins/etalage/jquery.zoom.min.js</script></action>
             <action method="addItem"><type>js_css</type><name>smartwave/jquery/plugins/etalage/etalage.css</name></action>
         </reference>
+        <!--changes start added-->
+        <reference name="product.info">
+            <block type="catalog/product_view_attributes" name="attributes" template="catalog/product/view/attributes.phtml"/>
+        </reference>
+        <reference name="product.info.options.wrapper.bottom">
+            <action method="unsetChild"><name>product.info.addtocart</name></action>
+            <action method="unsetChild"><name>product.info.addto</name></action>
+        </reference>
+        <!--changes end-->
         <reference name="product.info.additional">
             <action method="unsetChild"><name>product_tag_list</name></action>
             <block type="catalog/product_view_tabs" name="product.info.tabs" as="info_tabs">
                 <action method="setTemplate" ><template>catalog/product/view/tabs.phtml</template></action>
+                <action method="addTab" translate="title" module="catalog" ><alias>additional_tabbed</alias><title>Specifications</title><block>catalog/product_view_attributes</block><template>catalog/product/view/attributes.phtml</template></action>
                 <action method="addTab" translate="title" module="catalog" ><alias>description_tabbed</alias><title>Description</title><block>catalog/product_view_description</block><template>catalog/product/view/description.phtml</template></action>
-                <action method="addTab" translate="title" module="catalog" ><alias>additional_tabbed</alias><title>Additional</title><block>catalog/product_view_attributes</block><template>catalog/product/view/attributes.phtml</template></action>
                 <action method="addTab" translate="title" module="tag" ><alias>tags_tabbed</alias><title>Tags</title><block>tag/product_list</block><template>tag/list.phtml</template></action>
                 <action method="addTab" translate="title" module="review" ><alias>review_tabbed</alias><title>Reviews</title><block>review/product_view_list</block><template>review/product_info_review.phtml</template></action>
             </block>
         </reference>
+        <!--changes start commenting out to remove display on frontend-->
         <reference name="right">
             <remove name="right.poll"/>
             <remove name="right.reports.product.viewed"/>
             <remove name="catalog.compare.sidebar"/>
             <remove name="right.permanent.callout"/>
-            <block type="cms/block" name="product.right.custom1" before="-"><action method="setBlockId"><block_id>porto_product_right_side_1</block_id></action></block>
-            <block type="cms/block" name="product.right.custom2" after="product.right.custom1"><action method="setBlockId"><block_id>porto_product_right_side_2</block_id></action></block>
+            <remove name="sale.reorder.sidebar"/>
+            <!--<block type="cms/block" name="product.right.custom1" before="-"><action method="setBlockId"><block_id>porto_product_right_side_1</block_id></action></block>-->
+            <!--<block type="cms/block" name="product.right.custom2" after="product.right.custom1"><action method="setBlockId"><block_id>porto_product_right_side_2</block_id></action></block>-->
         </reference>
+        <!--changes end-->
         <reference name="product.info.upsell">
             <action method="setColumnCount" ifconfig="porto_settings/general/layout" condition="1024"><columns>3</columns></action>
             <action method="setItemLimit" ifconfig="porto_settings/general/layout" condition="1024"><type>upsell</type><limit>3</limit></action>
+            <!--Vinu changes for increasing no.of upsell products displayed on product page-->
+            <action method="setItemLimit"><type>upsell</type><limit>10</limit></action>
+            <!--Vinu changes end-->
         </reference>
     </catalog_product_view>
+
     <checkout_onepage_index>
         <reference name="root">
             <action method="setTemplate"><template>page/2columns-right.phtml</template></action>
         </reference>
+        <!--changes start added-->
+        <!--changes added to get custom header instead of default-->
+        <reference name="header">
+            <action method="setTemplate"><template>page/html/checkoutheader.phtml</template></action>
+        </reference>
+        <!--changes done to right sidebar on checkout page-->
+        <reference name="right">
+            <block type="checkout/onepage_review_info" name="checkout_review_sidebar" before="-" template="checkout/onepage/review/inforight.phtml">
+                <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/onepage/review/itemright.phtml</template></action>
+                <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/onepage/review/itemright.phtml</template></action>
+                <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/onepage/review/itemright.phtml</template></action>
+                <block type="checkout/cart_totals" name="checkout.onepage.review.info.totals" as="totals" template="checkout/onepage/review/totalsright.phtml"/>
+                <block type="core/text_list" name="checkout.onepage.review.info.items.before" as="items_before" translate="label">
+                    <label>Items Before</label>
+                </block>
+            </block>
+        </reference>
+        <!--changes end-->
     </checkout_onepage_index>
+
+    <!--Vinu changes to remove shipping estimate block on cart page-->
+    <checkout_cart_index>
+        <reference name="content">
+            <remove name="checkout.cart.shipping"/>
+        </reference>
+    </checkout_cart_index>
+    <!--Vinu changes end to remove shipping estimate block on cart page-->
+
     <catalogsearch_result_index>
         <reference name="root">
             <action method="setTemplate"><template>page/2columns-left.phtml</template></action>
         </reference>
         <reference name="left">
-            <block type="cms/block" name="custom_side_block" after="-"><action method="setBlockId"><block_id>porto_left_side_category</block_id></action></block>
+            <block type="catalog/navigation" name="catalog.leftnav" after="currency" template="catalog/navigation/left.phtml"/>
+            <!-- vinu changes to remove additional items from left navigation -->
+            <!--<block type="cms/block" name="custom_side_block" after="-"><action method="setBlockId"><block_id>porto_left_side_category</block_id></action></block>-->
         </reference>
     </catalogsearch_result_index>
     <catalogsearch_advanced_index>
@@ -226,7 +295,8 @@
             <action method="setTemplate"><template>page/2columns-left.phtml</template></action>
         </reference>
         <reference name="left">
-            <block type="cms/block" name="custom_side_block" after="-"><action method="setBlockId"><block_id>porto_left_side_category</block_id></action></block>
+            <!-- vinu changes to remove additional items from left navigation -->
+            <!--<block type="cms/block" name="custom_side_block" after="-"><action method="setBlockId"><block_id>porto_left_side_category</block_id></action></block>-->
         </reference>
     </catalogsearch_advanced_index>
     <catalogsearch_advanced_result>
@@ -234,7 +304,9 @@
             <action method="setTemplate"><template>page/2columns-left.phtml</template></action>
         </reference>
         <reference name="left">
-            <block type="cms/block" name="custom_side_block" after="-"><action method="setBlockId"><block_id>porto_left_side_category</block_id></action></block>
+            <block type="catalog/navigation" name="catalog.leftnav" after="currency" template="catalog/navigation/left.phtml"/>
+            <!-- vinu changes to remove additional items from left navigation -->
+            <!--<block type="cms/block" name="custom_side_block" after="-"><action method="setBlockId"><block_id>porto_left_side_category</block_id></action></block>-->
         </reference>
     </catalogsearch_advanced_result>
     <contacts_index_index>
@@ -304,5 +376,11 @@
             <action method="setTemplate"><template>page/1column.phtml</template></action>
         </reference>
     </sendfriend_product_send>
+
+    <customer_logged_in>
+        <reference name="top.links">
+            <action method="addLink" translate="label title" module="customer"><label>My Account</label><url helper="customer/getAccountUrl"/><title>My Account</title><prepare/><urlParams/><position>10</position></action>
+        </reference>
+    </customer_logged_in>
 
 </layout>
